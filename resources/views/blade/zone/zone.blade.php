@@ -1,12 +1,12 @@
 @include('master.header')
 <style>
     .content-wrapper {
-        background: #13234d;
+        background: #bd0394;
         /* Fallback color if gradients are not supported */
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
         /* For Safari and Chrome */
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
         /* For Firefox */
     }
 
@@ -27,25 +27,66 @@
     }
 
     .gaming-card .card-header {
-        background: #162858;
+
         color: white;
         border-bottom: 2px solid #0056b3;
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: #bd0394;
+        /* Fallback color if gradients are not supported */
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Safari and Chrome */
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Firefox */
     }
+
 
     .gaming-card .card-body {
         padding: 0;
     }
 
     th {
-        background: #162858;
+
         color: white;
         border-bottom: 2px solid #0056b3;
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: #bd0394;
+        /* Fallback color if gradients are not supported */
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Safari and Chrome */
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Firefox */
+    }
+
+    .modal-header {
+        background: #bd0394;
+        /* Fallback color if gradients are not supported */
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Safari and Chrome */
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Firefox */
+    }
+
+    .custom-btn {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        padding: 10px;
+        font-size: 15px;
+        cursor: pointer;
+        background: linear-gradient(45deg, #3a89eb, #bd0394);
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: bold;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        transition: box-shadow 0.3s ease;
+    }
+
+    /* Add the neon light effect on hover */
+    .custom-btn:hover {
+        box-shadow: 0 0 20px rgba(14, 221, 248, 0.8);
     }
 
     .custom-logout {
@@ -55,7 +96,7 @@
         padding: 10px;
         font-size: 15px;
         cursor: pointer;
-        background: linear-gradient(45deg, #162858, #fd0000);
+        background: linear-gradient(45deg, #bd0394, #3a89eb);
         color: #fff;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -142,8 +183,8 @@
                 </div>
             @endif
             <section class="content-body">
-                <div class="my-4 ml-2"> <button type="button" class="btn btn-default text-white" data-toggle="modal"
-                        data-target="#modal-xl" style="background-color: #007BFF">
+                <div class="my-4 ml-2"> <button type="button" class="btn btn-default text-white custom-btn"
+                        data-toggle="modal" data-target="#modal-xl" style="background-color: #007BFF">
                         Zone Register
                     </button></div>
                 <div class="modal fade" id="modal-xl">
@@ -212,9 +253,9 @@
                                                 @enderror
                                             </div>
                                             <div class="modal-footer justify-content-between">
-                                                <button type="button" class="btn btn-default"
+                                                <button type="button" class="btn btn-default custom-btn"
                                                     data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary mt-3 mb-3 "
+                                                <button type="submit" class="btn btn-primary custom-btn mt-3 mb-3 "
                                                     style="background-color: #0069D9">Submit</button>
                                             </div>
 

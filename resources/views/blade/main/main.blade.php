@@ -50,6 +50,8 @@
         .custom-col-1 {
             min-width: 100%;
         }
+
+
     }
 
     @media only screen and (width: 375px) {
@@ -66,6 +68,7 @@
         .custom-col-1 {
             min-width: 100%;
         }
+
     }
 
 
@@ -132,17 +135,17 @@
         position: relative;
         overflow: hidden;
         border: none;
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 10px;
+        font-size: 15px;
         cursor: pointer;
-        background: linear-gradient(45deg, #162858, #0069D9);
+        background: linear-gradient(45deg, #3a89eb, #bd0394);
         color: #fff;
         text-transform: uppercase;
         letter-spacing: 2px;
         font-weight: bold;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        transition: box-shadow 0.1s ease;
+        transition: box-shadow 0.3s ease;
     }
 
     /* Add the neon light effect on hover */
@@ -192,11 +195,13 @@
 
 
 
-        background: #13234d;
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-
+        background: #bd0394;
+        /* Fallback color if gradients are not supported */
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Safari and Chrome */
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Firefox */
         font-family: "Times New Roman", Times, serif;
     }
 
@@ -206,17 +211,17 @@
         position: relative;
         overflow: hidden;
         border: none;
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 10px;
+        font-size: 15px;
         cursor: pointer;
-        background: linear-gradient(45deg, #162858, #0069D9);
+        background: linear-gradient(45deg, #3a89eb, #bd0394);
         color: #fff;
         text-transform: uppercase;
         letter-spacing: 2px;
         font-weight: bold;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        transition: box-shadow 0.1s ease;
+        transition: box-shadow 0.3s ease;
     }
 
     /* Add the neon light effect on hover */
@@ -285,9 +290,37 @@
                                         value="{{ $zoneid }}" required style="display: none">
                                 @endif
 
+                                {{-- <div class="row mt-5">
+                                    <div class="col-md-4 custom-col">
+                                        <ul class="PcDiamant-ul commonDiamant-ul">
+                                            <li class="fr fs" ga-data="1726" id="16642">
+                                                <span ga-data="1726" style="font-size: 130%">
+                                                    <em ga-data="1726">
+                                                        R$ 6,40 </em>
+                                                    <em ga-data="1726">
+                                                    </em>
+                                                    <em class="PcliFo-em2 mx-5" ga-data="1726"> <img style="width: 20%"
+                                                            src="{{ asset('frontend/photo/diamond.png') }}"
+                                                            alt="">
+                                                    </em>
+                                                </span>
+                                                <span ga-data="1726">
+
+                                                    <p><strong style="color: rgb(51, 153, 153);" ga-data="1726">Passe
+                                                            Semanal de
+                                                            Diamante</strong>
+                                                    </p>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> --}}
+
                                 <div class="row mt-3">
                                     <div class="col-md-4 custom-col">
                                         <ul class="PcDiamant-ul commonDiamant-ul">
+
+
                                             <li class="fr fs" ga-data="1702" id="13">
                                                 <span ga-data="1702" style="font-size: 130%">
                                                     <em ga-data="1702">
@@ -357,6 +390,8 @@
                                     </div>
                                     <div class="col-md-4 custom-col">
                                         <ul class="PcDiamant-ul commonDiamant-ul">
+
+
                                             <li class="fr fs" ga-data="1704" id="25">
                                                 <span ga-data="1705" style="font-size: 130%">
                                                     <em ga-data="1705">
@@ -425,6 +460,8 @@
                                                 <div class="Pcright-icon commonright-icon" ga-data="1707">
                                                 </div>
                                             </li>
+
+
                                             <!-- Add more list items as needed -->
                                         </ul>
                                     </div>
@@ -498,8 +535,35 @@
                                                 <div class="Pcright-icon commonright-icon" ga-data="1712">
                                                 </div>
                                             </li>
+
+
                                         </ul>
                                     </div>
+                                    <div class="col-md-4 custom-col-1">
+                                        <ul class="PcDiamant-ul commonDiamant-ul">
+                                            <li class="fr fs li" ga-data="1726" id="16642">
+                                                <span ga-data="1726" style="font-size: 130%">
+                                                    <em ga-data="1726">
+                                                        R$ 6,40 </em>
+                                                    <em ga-data="1726">
+                                                    </em>
+                                                    <em class="PcliFo-em2 mx-5" ga-data="1726"> <img
+                                                            style="width: 20%"
+                                                            src="{{ asset('frontend/photo/diamond.png') }}"
+                                                            alt="">
+                                                    </em>
+                                                </span>
+                                                <span ga-data="1726">
+
+                                                    <p><strong style="color: rgb(51, 153, 153);" ga-data="1726">Passe
+                                                            Semanal de
+                                                            Diamante</strong>
+                                                    </p>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-outline-primary btn-lg">Submit</button>

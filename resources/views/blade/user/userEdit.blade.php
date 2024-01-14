@@ -1,12 +1,12 @@
 @include('master.header')
 <style>
     .content-wrapper {
-        background: #13234d;
+        background: #bd0394;
         /* Fallback color if gradients are not supported */
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
         /* For Safari and Chrome */
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
         /* For Firefox */
     }
 
@@ -17,7 +17,7 @@
         padding: 10px;
         font-size: 15px;
         cursor: pointer;
-        background: linear-gradient(45deg, #162858, #0069D9);
+        background: linear-gradient(45deg, #3a89eb, #bd0394);
         color: #fff;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -50,26 +50,22 @@
     }
 
     .gaming-card .card-header {
-        background: #162858;
+
         color: white;
         border-bottom: 2px solid #0056b3;
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
+        background: #bd0394;
+        /* Fallback color if gradients are not supported */
+        background: linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        background: -webkit-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Safari and Chrome */
+        background: -moz-linear-gradient(295deg, #bd0394 0%, #3a89eb 80%);
+        /* For Firefox */
     }
 
     .gaming-card .card-body {
         padding: 0;
     }
 
-    th {
-        background: #162858;
-        color: white;
-        border-bottom: 2px solid #0056b3;
-        background: linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -webkit-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-        background: -moz-linear-gradient(295deg, #13234d 0%, #0851aa 80%);
-    }
 
     .animated-input {
         border: 2px solid #ccc;
@@ -110,7 +106,7 @@
         padding: 10px;
         font-size: 15px;
         cursor: pointer;
-        background: linear-gradient(45deg, #162858, #fd0000);
+        background: linear-gradient(45deg, #bd0394, #3a89eb);
         color: #fff;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -269,8 +265,7 @@
                                                         <label for="exampleInputPassword1">New Password<span
                                                                 class="text-danger">*</span></label>
                                                         <input type="password" class="form-control animated-input"
-                                                            id="exampleInputPassword1" name="new_password"
-                                                            value="{{ $userShow }}" required>
+                                                            id="exampleInputPassword1" name="new_password" required>
                                                         @error('new_password')
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror

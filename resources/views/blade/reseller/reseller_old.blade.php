@@ -213,13 +213,6 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-8"> <!-- Adjust the column size as needed -->
                                             <div class="card gaming-card">
-                                                <?php if (Session::has('error')) {
-                                                    // echo Session::get('val');
-                                                
-                                                    echo Session::get('error');
-                                                    //  echo gettype($sec_value);
-                                                }
-                                                ?>
                                                 <div class="card-header">
                                                     <h3 class="text-center">Reseller</h3>
                                                 </div>

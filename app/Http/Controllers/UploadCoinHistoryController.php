@@ -11,8 +11,10 @@ class UploadCoinHistoryController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $histories = UploadCoinHistory::where('user_id', $id)->get();
+        $userName = $user->name;
 
-        return view('blade.uploadCoin.uploadCoinHistory', compact('histories', 'user'));
+        //
+        $histories = UploadCoinHistory::where('user_id', $id)->get();
+        return view('blade.uploadCoin.uploadCoinHistory', compact('histories', 'userName'));
     }
 }

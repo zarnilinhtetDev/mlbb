@@ -9,36 +9,49 @@ use Illuminate\Http\Request;
 use Session;
 use Auth;
 
+require_once 'converttostring.php';
 
 class ResellerController extends Controller
 {
     public function reseller()
     {
-        return view('blade.reseller.reseller');
+        $credits = Credit::where('user_id', Auth::user()->id)->get();
+        return view('blade.reseller.reseller', compact('credits'));
     }
     public function reseller_store(Request $request)
     {
+
+        // dd($request->all());
         $login_userid = Auth::user()->id;
         $p_coin_13 = 80;
         $coin_balance = 100;
         $client_zoneid = [];
         $client_zoneid_associate_name = [];
-        $data = $this->convert_string_to_data($request->code);
-        foreach ($data as $key => $pval) {
-            $prduct_name = $pval[2];
-            $product_id = Zone::where('product_name', $prduct_name)->first('product_id');
-            //validate the product enter is exit
-            if (is_null($product_id)) {
-                Session::put('error', "product does not exit");
+        // $data = $this->convert_string_to_data($request->code);
+        $data = $this->convert_string_to_data2($request->code);
 
+        // $data2 = $converter->convert_string_to_data2($request->code);
+
+        foreach ($data as $key => $pval) {
+
+            $prduct_name = $pval[2];
+            $product_id = Zone::where('product_name', $prduct_name)->first();
+            // dd($product_id);
+
+            if (is_null($product_id)) {
+                Session::put('productid_error', "product name does not exit ");
+                $response[$key][0] = (object)['message' => 'product name does not exit '];
+                $response[$key][1] = $pval[0];
+                $response[$key][2] = $pval[1];
+                // $response[$key][3] = $pid;  //product id
+                Session::flash('message', 'Insufficient balance ');
+                $this->session_message($response);
                 return view('blade.reseller.reseller');
             }
             $client_zoneid[$key] = $product_id->product_id;
             $client_zoneid_associate_name[$prduct_name] = $product_id->product_id;
         }
-        // dd($client_zoneid_associate_name);
 
-        // dd($data[0][2]);
         $response = [];
         $responses = [];
         $coin_order = 0;
@@ -46,13 +59,13 @@ class ResellerController extends Controller
             //*************************balance check start here */
 
             $pid = $client_zoneid[$key];
+            // dd($pid);
             //below if condition statement will be replace with db data (we are goin to have the db with different coin for different zone)
             // if ($pid = 13) $p_coin = 80;
             // else if ($pid = 23) $p_coin = 160;
             // $coin_order = $pid;  //very important no plus sign here
             //get user id from user table . user auth->userid and get user id
 
-            //dd($coin_balance);
             //here will be the process or function to check the coin amount
             //from the product id from database
             // $p_coin = 80;
@@ -67,22 +80,44 @@ class ResellerController extends Controller
                 $response[$key][0] = (object)['message' => 'Insufficient balance from sse bonchone'];
                 $response[$key][1] = $datas[0];
                 $response[$key][2] = $datas[1];
-                //$response[$key][3] = $datas[2];   //old before zone table exit
-                $response[$key][3] = $pid;
-                //  dd($response);
 
+                $response[$key][3] = $pid;
                 break;
             } else {
-
                 $coin_balance = Credit::where('user_id', $login_userid)->first(); //get coin balance from login user account
-                $get_zoneid = $this->getrole($datas[0], $datas[1], $pid);  //get zone id of reload uid
+                $get_zoneid = $this->getrole($datas[0], $datas[1], $pid);
+                //dd($get_zoneid);
+                $aa = array($get_zoneid[0]);
+                $bb = $aa[0];
+                $cc = (array)$bb;
+                echo gettype($cc);
+                //dd(count($cc)); //get zone id of reload uid
                 $zone = Zone::where('product_id', $pid)->first();
+                //  dd($zone);
 
-                if ($get_zoneid[0]->zone == 1) $coin_cost = $zone->indo;
-                elseif ($get_zoneid[0]->zone == 2) $coin_cost = $zone->brazil;
-                elseif ($get_zoneid[0]->zone == 3) $coin_cost = $zone->global;
+                // dd($zone->indo);
+                $arr_count = count($cc);
+                if ($arr_count <= 2) {
 
-                //  dd($coin_cost);
+                    $response[$key][0] = (object)['message' => 'This product has reached the purchase limit, please try purchasing another product！']; //this should be deffer base on smile.one server response
+                    $response[$key][1] = $datas[0];  //user id
+                    $response[$key][2] = $datas[1];  //zone id
+                    $response[$key][3] = $pid;  //product id
+                    $this->session_message($response);
+                    return view('blade.reseller.reseller');
+                } else {
+                    if (!empty($zone)) {
+                        if ($get_zoneid[0]->zone < 1) $coin_cost = $zone->brazil;
+                        else {
+                            if ($get_zoneid[0]->change_price > 1.25) $coin_cost = $zone->indo;
+                            else $coin_cost = $zone->global;
+                        }
+                    } else {
+                        Session::put('zoneid_error', "product id at zone does not exit");
+
+                        return view('blade.reseller.reseller');
+                    }
+                }
 
                 if ($coin_balance->coin_balance >= $coin_cost) {
                     //GET zone number and get prize base on zone e.g ingo=1,brazil=2,golobal=3
@@ -91,17 +126,8 @@ class ResellerController extends Controller
                     echo $coin_balance->coin_balance;
                     $balance = $coin_balance->coin_balance;
                     $newBalance = $balance - $coin_cost;
-                    // $coin_balance->$coin_balance = $newBalance;
-                    // $coin_balance->save();
-                    // Credit::where('user_id', $userid)->update([
-                    //     'coin_balance' => $newBalance
-                    // ]);
-
-                    // dd($newBalance);
-
-
                     //  $server_response= $this->orderForm($datas[0], $datas[1], $datas[2]);    //old before zone table exit
-                    //  $server_response= $this->orderForm($datas[0], $datas[1], $pid);
+                    //  $server_response = $this->orderForm($datas[0], $datas[1], $pid);
                     /****** must below line unfreeze */
                     // $cmp = strcmp("Insufficient balance", $response[0]->message);
                     // //dd($cmp);
@@ -110,46 +136,31 @@ class ResellerController extends Controller
                     //     $bb->coin_balance = $newBalance;
                     //     $bb->save();
                     // }
-
+                    //dd($server_response[0]->message);
                     $bb = Credit::find($coin_balance->id);
                     $bb->coin_balance = $newBalance;
                     $bb->save();
-
-                    // dd($coin_order);
-                    // dd("die here");
+                    //  $response[$key][0] = $server_response[0]->message;
                     $response[$key][0] = (object)['message' => 'Success from sse']; //this should be deffer base on smile.one server response
-
                     $response[$key][1] = $datas[0];  //user id
                     $response[$key][2] = $datas[1];  //zone id
-                    //  $response[$key][3] = $datas[2];  //product id //old before zone table exit
                     $response[$key][3] = $pid;  //product id
                 } else {
 
                     $response[$key][0] = (object)['message' => 'Insufficient balance from sse'];
                     $response[$key][1] = $datas[0];
                     $response[$key][2] = $datas[1];
-                    //  $response[$key][3] = $datas[2];  //product id //old before zone table exit
                     $response[$key][3] = $pid;  //product id
-                    //  dd($response);
                     Session::flash('message', 'Insufficient balance ');
                     break;
                 }
             }
-            // $response = $response;
-            // dd($response . "what the fuck");
 
-            // $uid = is_object($response[0]) ? $response[0]->message : null;
             $message = $response[$key][0]->message;
+            // $message = $server_response[0]->message;
             $uid = isset($response[$key][1]) ? $response[$key][1] : null;
             $zid = isset($response[$key][2]) ? $response[$key][2] : null;
             $pidd = isset($response[$key][3]) ? $response[$key][3] : null;
-
-
-
-            // $uid = is_string($uid) ? $uid : null;
-            // $zid = is_string($zid) ? $zid : null;
-            // $pid = is_string($pid) ? $pid : null;
-
 
             TransationHistory::create([
                 'message' => $message,
@@ -159,48 +170,59 @@ class ResellerController extends Controller
                 'coin_amount' => $coin_order,
                 'coin_balance' => $newBalance,
             ]);
-
-
-            // dd($response);
         }
 
-        // $responses[] = $response; correct
         echo (gettype($response));
-        //   dd($response);
-        foreach ($response as $key => $val) {
-            //  dd($val);
-            $response[$key][0] = $val[0]->message;
-        }
-        foreach ($response as $key => $val) {
-            $response[$key] = implode(' ', $val);
-        }
         // dd($response);
-        $arr_res = $response;
-        $sec = implode(',', $arr_res);
-        //dd($sec);
-        // if (session('responses')) {
-        //     foreach (session('responses') as $value) {
-        //         // User Id {{ $response[0]->message }}  User Id {{ $response[1] }} Zone Id {{ $response[2] }}
-        //         $value += $response;
-        //     }
-        // }
-        //session(['responses' => $responses]);
-
-
-        if (Session::has('val')) {
-            $old_val = Session::get('val');
-            $sec = $sec . "," . $old_val;
-            Session::put('val', $sec);
-        } else  Session::put('val', $sec);
+        $this->session_message($response);
 
         return view('blade.reseller.reseller', compact('responses'));
     }
+    public function convert_string_to_data2($e)
+    {
+        $arr = explode('/', $e);
+        $final_data = [];
+        $cot = 0;
 
+        foreach ($arr as $key => $c) {
+            $uid = strtok($c, '(');
+            $aa = strtok($c, ')');
+            $dd = strpos($aa, "(");
+            $zid = substr($aa, $dd + 1, 7);
+
+            if (strpos($c, "*") !== false) {
+                $z = strtok($c, '*');
+                $x = strpos($z, ")");
+                $pid = substr($z, ($x + 1), 5);
+                $y = strpos($c, "*");
+                $ptime = substr($c, ($y + 1), 5);
+
+                $string = $uid . "," . $zid . "," . $pid;
+                $newdata = [];
+
+                for ($i = 0; $i < $ptime; $i++) {
+                    $newdata[$i] = $string;
+                }
+
+                foreach ($newdata as $key => $vv) {
+                    $tt = explode(',', $vv);
+                    $final_data[($cot)] = array($tt[0], $tt[1], $tt[2]);
+                    $cot++;
+                }
+            } else {
+                $xx = strpos($c, ")");
+                $pid = substr($c, ($xx + 1), 5);
+                $final_data[$cot] = array($uid, $zid, $pid);
+            }
+            $cot++;
+        }
+
+        return $final_data;
+    }
     public function convert_string_to_data($e)
     {
-
-        $arr = explode('/', $e);
-        //print_r($arr);
+        // $arr = explode('/', $e);
+        $arr = explode(',', $e);
 
         $data1 = array();
         $uid = 0;
@@ -212,23 +234,18 @@ class ResellerController extends Controller
             $aa = strtok($value, ')');
             $dd = strpos($aa, "(");
             $zid = substr($aa, $dd + 1, 7);
-            //$data1+=array($uid=>$zid);
+
             $x = strpos($value, ")");
             $pid = substr($value, ($x + 1), 5);
 
             $data1[$key] = array($uid, $zid, $pid);
         }
         return $data1;
-
-
-        // echo "<br>" . count($data1);
     }
-
 
     public function orderForm($uid, $zid, $pid)
     {
-        // dd($request->all());
-        // dd($request->all());
+
         $userid = $uid;
         $zoneid = $zid;
         $email = "billionmore97@gmail.com";
@@ -250,7 +267,7 @@ class ResellerController extends Controller
         $m_key = "b69f5758549ec089966e726a21c8c1d7";
 
         $sign_arr['sign'] = $this->sign($sign_arr, $m_key);
-        //  dd($sign_arr);
+
         $url = 'https://www.smile.one/smilecoin/api/createorder';
 
         $res = $this->curlPost($url, $sign_arr);
@@ -260,14 +277,12 @@ class ResellerController extends Controller
         $data_return[2] = $zid;
         $data_return[3] = $pid;
 
-        // dd($res);
         return $data_return;
     }
 
     public function getrole($uid, $zid, $pid)
     {
-        // dd($request->all());
-        // dd($request->all());
+
         $userid = $uid;
         $zoneid = $zid;
         $email = "billionmore97@gmail.com";
@@ -289,7 +304,7 @@ class ResellerController extends Controller
         $m_key = "b69f5758549ec089966e726a21c8c1d7";
 
         $sign_arr['sign'] = $this->sign($sign_arr, $m_key);
-        //  dd($sign_arr);
+
         $url = 'https://www.smile.one/smilecoin/api/getrole';
 
         $res = $this->curlPost($url, $sign_arr);
@@ -299,12 +314,8 @@ class ResellerController extends Controller
         $data_return[2] = $zid;
         $data_return[3] = $pid;
 
-        // dd($res);
         return $data_return;
     }
-
-
-
 
     private function sign($sign_arr = [], $m_key)
     {
@@ -359,5 +370,25 @@ class ResellerController extends Controller
     {
         $transactions = TransationHistory::where('user_id', $id)->get();
         return view('blade.reseller.resellerHistory', compact('transactions'));
+    }
+
+    public function session_message($response)
+    {
+        foreach ($response as $key => $val) {
+
+            $response[$key][0] = $val[0]->message;
+            // $response[$key][0] = $val[0]->message;
+        }
+        foreach ($response as $key => $val) {
+            $response[$key] = implode(' ', $val);
+        }
+        $arr_res = $response;
+        $sec = implode(',', $arr_res);
+
+        if (Session::has('val')) {
+            $old_val = Session::get('val');
+            $sec = $sec . "," . $old_val;
+            Session::put('val', $sec);
+        } else  Session::put('val', $sec);
     }
 }
